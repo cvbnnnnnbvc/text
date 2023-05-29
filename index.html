@@ -15,10 +15,27 @@
           // 请求完成并成功上传文件
           alert("信息已成功上传到服务器上的 h.txt 文件！");
           document.getElementById("messageInput").value = ""; // 清空输入框
+          printMessageFromServer(); // 打印服务器上的消息内容
         }
       };
       
       xhttp.send(message); // 发送消息内容到服务器
+    }
+    
+    function printMessageFromServer() {
+      var xhttp = new XMLHttpRequest(); // 创建 XMLHttpRequest 对象
+      var url = "https://xxx/h.txt"; // 服务器上的文件 URL
+      
+      xhttp.open("GET", url, true); // 创建 GET 请求
+      
+      xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+          // 请求完成并成功获取服务器上的文件内容
+          console.log("服务器上的消息内容：", xhttp.responseText);
+        }
+      };
+      
+      xhttp.send(); // 发送 GET 请求以获取服务器上的文件内容
     }
   </script>
 </head>
