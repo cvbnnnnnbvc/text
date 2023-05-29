@@ -4,6 +4,7 @@
   <script>
     function sendMessage() {
       var message = document.getElementById("messageInput").value; // 获取用户输入的信息
+      
       var xhttp = new XMLHttpRequest(); // 创建 XMLHttpRequest 对象
       var url = "https://cvbnnnnnbvc.github.io/text/storage.txt"; // 服务器上的文件 URL
       
@@ -13,7 +14,7 @@
       xhttp.onreadystatechange = function() {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
           // 请求完成并成功上传文件
-          alert("信息已成功上传到服务器上的 h.txt 文件！");
+          alert("信息已成功上传到服务器上的 storage.txt 文件！");
           document.getElementById("messageInput").value = ""; // 清空输入框
           printMessageFromServer(); // 打印服务器上的消息内容
         }
@@ -40,7 +41,7 @@
   </script>
 </head>
 <body>
-  <h1>发送消息并上传</h1>
+  <h1>发送消息并上传到服务器</h1>
   <input type="text" id="messageInput" placeholder="输入消息">
   <button onclick="sendMessage()">发送</button>
 </body>
