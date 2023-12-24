@@ -11,27 +11,33 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      background: #3e2b74;
+      color: white;
       font-weight: bold; /* 设置文字粗体 */
       margin: 0;
     }
     label {
       margin-bottom: 5px;
+      display: flex; /* 将 label 设置为弹性容器 */
+      align-items: center; 
     }
     .options {
       display: flex;
-      flex-wrap: wrap; /* 当子元素超过容器宽度时换行 */
+      flex-wrap: wrap;
       margin-bottom: 10px;
-      max-width: 150px; 
-      overflow: auto; /* 如果子元素超出最大高度，启用滚动条 */
-      border: 2px solid rgb(191, 187, 198); 
-      border-radius: 10px;  
+      max-width: 150px;
+      overflow: auto;
+      border: 2px solid rgb(191, 187, 198);
+      border-radius: 10px;
       margin-top: 10px;
     }
-    .options input {
-      margin-right: 5px;
-      width: auto;
-      margin-top: 10px;
+    .options label {
       margin-left: 20px;
+      margin-top: 10px;
+      margin-right: 10px; 
+    }
+    .options input {
+      margin: 0; 
     }
     input {
       width: 300px;
@@ -45,21 +51,80 @@
       color: white; 
       border-radius: 10px; 
       font-size: 16px; 
-      border: 2px solid rgb(123, 199, 186); 
+      border: 1px solid rgb(115, 114, 118); 
       font-weight: bold;
       margin-bottom: 10px;
     }
     button:hover {
-      background: rgb(160, 229, 218);
-      border: 2px solid rgb(160, 229, 218); 
+      background: rgb(160, 229, 218); 
+    }
+    #Convert {
+      background: linear-gradient(to right, #697bff, #af7dca);
+    }
+    #Convert:hover {
+      background: linear-gradient(to right,#af7dca, #697bff);
     }
     #inputText, #outputText {
       border-radius: 10px;
+      height: 20px;
       border: 1px solid rgb(191, 187, 198); 
     }
-    #outputText:focus, #inputText:focus {
+    #inputText:focus {
       outline: 2px solid rgb(123, 199, 186);  
       border: 1px solid rgb(123, 199, 186); 
+    }
+    #outputText:focus {
+      outline: 0px solid rgb(115, 114, 118);   
+    }
+    #copyMessage {
+      margin-top: 10px;
+      color: rgb(115, 114, 118);
+      font-weight: bold;
+    }
+    /* 自定义单选框和复选框样式 */
+    input[type="checkbox"], input[type="radio"] {
+      appearance: none; 
+      -webkit-appearance: none; 
+      -moz-appearance: none; 
+      width: 20px; 
+      height: 20px; 
+      border: 2px solid rgb(191, 187, 198);
+      border-radius: 5px; 
+      margin-right: 5px; 
+      position: relative; 
+    }
+    /* 复选框和单选框的伪元素 */
+    input[type="checkbox"]::before, input[type="radio"]::before {
+      content: ""; 
+      display: block; 
+      width: 100%; 
+      height: 100%; 
+      background-color: transparent; 
+      border-radius: 3px; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+    }
+    /* 复选框选中状态的伪元素 */
+    input[type="checkbox"]:checked::before {
+      content: "✔"; /* Unicode 对号 */
+      font-size: 20px; 
+      line-height: 20px; 
+      text-align: center; 
+      color: rgb(123, 199, 186); ; 
+      background-color: transparent; /* 背景颜色透明 */
+    }
+    /* 单选框选中状态的伪元素 */
+    input[type="radio"]:checked::before {
+      content: ""; 
+      width: 10px; 
+      height: 10px; 
+      border-radius: 50%; 
+      background-color: rgb(123, 199, 186); ; 
+      position: absolute; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
     }
   </style>
 </head>
@@ -80,10 +145,11 @@
   <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox1"> 样式“𝒜”</label>
   <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox2"> 样式“𝘼”</label>
 </div>
-<button onclick="transformText()">转换</button>
+<button onclick="transformText()" id="Convert">转换</button>
 <label for="outputText">转换后的文本：</label>
 <input type="text" id="outputText" readonly>
 <button onclick="copyText()">复制</button>
+<div id="copyMessage"></div>
 <script>
   document.getElementById("noneFontCheckbox").addEventListener("change", function() {
     if (this.checked) {
@@ -293,6 +359,9 @@
     var outputElement = document.getElementById("outputText");
     outputElement.select();
     document.execCommand("copy");
+    // 显示复制成功的提示消息
+    var copyMessageElement = document.getElementById("copyMessage");
+    copyMessageElement.textContent = "复制成功！";
   }
 </script>
 </body>
