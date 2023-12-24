@@ -8,12 +8,13 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background: #6372bb;
+            color: white;
+            font-weight: bold; /* 添加按钮文字加粗样式 */
         }
-
         label {
             margin-right: 10px;
         }
-
         textarea, input, button {
             margin-bottom: 10px;
             padding: 10px;
@@ -22,53 +23,54 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-
         textarea {
             width: 100%;
             height: 150px;
         }
-
         #replaceInput {
             display: none;
         }
-
         #searchText ,#replaceText {
             border-radius: 10px;
+            margin-top: 10px;
         }
-
         .highlighted {
             background-color: purple;
             color: white;
         }
-
         .copybutton, .clearbutton {
             color: rgb(123, 199, 186);
-            border: 1px solid rgb(123, 199, 186); 
+            border: 2px solid rgb(123, 199, 186); 
             background: white;
-            width: 55px; /* 设置宽度 */
-            height: 30px; /* 设置高度 */
+            width: 59px; 
+            height: 31px; 
             line-height: 10px;
         }
-
         .copybutton:hover, .clearbutton:hover {
             color: white;
             background: rgb(123, 199, 186);
-            border: 1px solid rgb(123, 199, 186); 
+            border: 2px solid rgb(123, 199, 186); 
         }
-
-        #outputText {
+        #inputText, #outputText {
             width: 100%;
             height: 150px;
+            margin-top: 10px;
+            font-weight: bold;
         }
-
+        #outputText:focus, #inputText:focus, #searchText:focus, #replaceText:focus {
+            outline: 2px solid rgb(123, 199, 186);  
+        }
         #displayedText {
             color: white;
-            background-color: #777777; /* 浅灰色背景 */
+            background-color: #777777;
             padding: 5px;
             border-radius: 4px;
-            display: inline-block; /* 使背景只包含文本的宽度 */
+            margin-top: 10px;
+            display: inline-block;
+            max-height: 100px; 
+            overflow-y: auto; /* 启用垂直滚动条 */
+            border: 2px solid #9370db; 
         }
-
         button {
             background: linear-gradient(to right, #ff69b4, #9370db);
             color: white;
@@ -76,7 +78,6 @@
             border: 1px solid #9370db; /* 修正边框颜色 */
             border-radius: 10px;
         }
-
         button:hover {
             background: linear-gradient(to right, #ff1493, #8a2be2);
             border: 1px solid #8a2be2; /* 修正边框颜色 */
@@ -84,154 +85,85 @@
     </style>
 </head>
 <body>
-
     <label for="inputText">原始文本：</label>
-    <textarea id="inputText" rows="4" cols="50" placeholder="请输入要处理的文本..." oninput="updateCharacterCount(); highlightSearchText();"></textarea>
-    
+    <textarea id="inputText" rows="4" cols="50" placeholder="请输入要处理的文本..." oninput="updateCharacterCount(); highlightSearchText();"></textarea>   
     <button onclick="clearInputText()" class="clearbutton">清空</button>
-
     <div>
         字数（中文、字母、数字）：<span id="characterCount">0</span>
     </div>
-
     <div>
         字符数（包括标点和空格）：<span id="totalCharacterCount">0</span>
     </div>
-
     <label for="searchText">搜索字符：</label>
     <input type="text" id="searchText" oninput="updateSearchCount(); highlightSearchText();">
-
     <div>
         符合搜索的字符数：<span id="searchCount">0</span>
     </div>
-
     <div>
         检索到的内容：<span id="displayedText"></span>
     </div>
-
     <label for="replaceText">替换为字符：</label>
     <input type="text" id="replaceText">
     <button onclick="showReplaceInput()">替换</button>
-
     <div>
         最终文本：<textarea id="outputText" rows="4" cols="50" readonly></textarea>
     </div>
-
     <button onclick="copyOutputText()" class="copybutton">复制</button>
-
     <script>
         function updateCharacterCount() {
-            // 获取输入文本框的值
             var inputText = document.getElementById("inputText").value;
-
-            // 统计字符数（中文、字母、数字）
             var characterCount = inputText.replace(/[^\u4E00-\u9FA5\w]/g, '').length;
-
-            // 统计所有字符数（包括标点和空格）
             var totalCharacterCount = inputText.length;
-
-            // 更新显示区域的内容
             document.getElementById("characterCount").textContent = characterCount;
             document.getElementById("totalCharacterCount").textContent = totalCharacterCount;
-
-            // 更新搜索字符数
             updateSearchCount();
         }
-
         function updateSearchCount() {
-            // 获取搜索字符输入框的值
             var searchText = document.getElementById("searchText").value;
-
-            // 获取输入文本框的值
-            var inputText = document.getElementById("inputText").value;
-
-            // 如果搜索框为空，显示0
+            var inputText = document.getElementById("inputText").value;0
             if (searchText === "") {
                 document.getElementById("searchCount").textContent = 0;
                 return;
             }
-
-            // 使用正则表达式匹配搜索字符
             var searchRegex = new RegExp(searchText, 'g');
             var searchMatches = inputText.match(searchRegex);
-
-            // 计算匹配的字符数
             var searchCount = searchMatches ? searchMatches.length : 0;
-
-            // 更新显示区域的内容
             document.getElementById("searchCount").textContent = searchCount;
         }
-
         function highlightSearchText() {
-            // 获取输入文本框的值
             var inputText = document.getElementById("inputText").value;
-
-            // 获取搜索字符输入框的值
             var searchText = document.getElementById("searchText").value;
-
-            // 获取用于显示输入框内容的元素
             var displayedTextElement = document.getElementById("displayedText");
-
-            // 将匹配的部分标记为紫色
             var highlightedText = inputText.replace(new RegExp(searchText, 'g'), function(match) {
                 return '<span class="highlighted">' + match + '</span>';
             });
-
-            // 更新显示区域的内容
             displayedTextElement.innerHTML = highlightedText;
         }
-
         function showReplaceInput() {
-            // 获取替换字符输入框的值
             var replaceText = document.getElementById("replaceText").value;
-
-            // 获取用于显示输入框内容的元素
             var displayedTextElement = document.getElementById("displayedText");
-
-            // 获取用于替换的正则表达式
             var searchRegex = new RegExp(document.getElementById("searchText").value, 'g');
-
-            // 获取输入文本框的值
             var inputText = document.getElementById("inputText").value;
-
-            // 替换字符
             var replacedText = inputText.replace(searchRegex, replaceText);
-
-            // 显示替换后的文本
             document.getElementById("outputText").value = replacedText;
-
-            // 更新显示区域的内容，带有高亮显示
             var highlightedText = inputText.replace(searchRegex, function(match) {
                 return '<span class="highlighted">' + match + '</span>';
             });
             displayedTextElement.innerHTML = highlightedText;
-
-            // 显示替换字符输入框
             var replaceInput = document.getElementById("replaceInput");
             replaceInput.style.display = "block";
         }
-
         function copyOutputText() {
-            // 获取替换后的文本框的值
             var outputText = document.getElementById("outputText");
-
-            // 选择文本
             outputText.select();
             outputText.setSelectionRange(0, 99999); /* For mobile devices */
-
-            // 复制文本
             document.execCommand("copy");
         }
-
         function clearInputText() {
-            // 清空输入文本框的值
             document.getElementById("inputText").value = "";
-
-            // 更新相关内容
             updateCharacterCount();
             highlightSearchText();
         }
     </script>
-
 </body>
 </html>
