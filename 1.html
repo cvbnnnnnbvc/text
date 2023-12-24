@@ -11,40 +11,63 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      font-weight: bold; /* 设置文字粗体 */
       margin: 0;
     }
-
     label {
       margin-bottom: 5px;
     }
-
     .options {
       display: flex;
+      flex-wrap: wrap; /* 当子元素超过容器宽度时换行 */
       margin-bottom: 10px;
+      max-width: 150px; 
+      overflow: auto; /* 如果子元素超出最大高度，启用滚动条 */
+      border: 2px solid rgb(191, 187, 198); 
+      border-radius: 10px;  
+      margin-top: 10px;
     }
-
     .options input {
       margin-right: 5px;
       width: auto;
+      margin-top: 10px;
+      margin-left: 20px;
     }
-
     input {
       width: 300px;
       padding: 5px;
       margin-bottom: 10px;
     }
-
     button {
       padding: 5px 10px;
       cursor: pointer;
+      background-color: rgb(123, 199, 186); 
+      color: white; 
+      border-radius: 10px; 
+      font-size: 16px; 
+      border: 2px solid rgb(123, 199, 186); 
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: rgb(160, 229, 218);
+      border: 2px solid rgb(160, 229, 218); 
+    }
+    #inputText, #outputText {
+      border-radius: 10px;
+      border: 1px solid rgb(191, 187, 198); 
+    }
+    #outputText:focus, #inputText:focus {
+      outline: 2px solid rgb(123, 199, 186);  
+      border: 1px solid rgb(123, 199, 186); 
     }
   </style>
 </head>
 <body>
-
 <label for="inputText">输入文本：</label>
 <input type="text" id="inputText">
-
+<button onclick="clearText()">清空</button>
+选择字符的装饰样式：
 <div class="options">
   <label><input type="checkbox" id="toUpperCaseCheckbox"> 英文大写</label>
   <label><input type="checkbox" id="strikethroughlineCheckbox"> 添加删除线</label>
@@ -52,21 +75,17 @@
   <label><input type="checkbox" id="twounderlineCheckbox"> 添加圆圈</label>
 </div>
 选择英文的字体样式：
-<!-- 添加单选框和相关的label元素 -->
 <div class="options">
   <label><input type="radio" name="fontStyle" id="noneFontCheckbox" checked> 无</label>
   <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox1"> 样式“𝒜”</label>
   <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox2"> 样式“𝘼”</label>
 </div>
-
 <button onclick="transformText()">转换</button>
-
 <label for="outputText">转换后的文本：</label>
 <input type="text" id="outputText" readonly>
-
+<button onclick="copyText()">复制</button>
 <script>
   document.getElementById("noneFontCheckbox").addEventListener("change", function() {
-    // 如果选择“无”，则将其他所有选项的勾选状态取消
     if (this.checked) {
       document.getElementById("toUpperCaseCheckbox").checked = false;
       document.getElementById("strikethroughlineCheckbox").checked = false;
@@ -74,7 +93,6 @@
       document.getElementById("twounderlineCheckbox").checked = false;
     }
   });
-
   function transformText() {
     var inputElement = document.getElementById("inputText");
     var outputElement = document.getElementById("outputText");
@@ -85,43 +103,31 @@
     var noneFontCheckbox = document.getElementById("noneFontCheckbox");
     var decorativeFontCheckbox1 = document.getElementById("decorativeFontCheckbox1");
     var decorativeFontCheckbox2 = document.getElementById("decorativeFontCheckbox2");
-
     var inputText = inputElement.value;
     var transformedText = inputText;
-
-  
-      if (toUpperCaseCheckbox.checked) {
-        transformedText = transformToUpperCase(transformedText);
-      }
-
-      if (strikethroughlineCheckbox.checked) {
-        transformedText = addUnderstrikethrough(transformedText);
-      }
-
-      if (underlineCheckbox.checked) {
-        transformedText = addUnderline1(transformedText);
-      }
-
-      if (twounderlineCheckbox.checked) {
-        transformedText = addUnderline2(transformedText);
-      }
-
-      if (decorativeFontCheckbox1.checked) {
-        transformedText = applyDecorativeFont1(transformedText);
-      }
-
-      if (decorativeFontCheckbox2.checked) {
-        transformedText = applyDecorativeFont2(transformedText);
-      }
-    
-
+    if (toUpperCaseCheckbox.checked) {
+      transformedText = transformToUpperCase(transformedText);
+    }
+    if (strikethroughlineCheckbox.checked) {
+      transformedText = addUnderstrikethrough(transformedText);
+    }
+    if (underlineCheckbox.checked) {
+      transformedText = addUnderline1(transformedText);
+    }
+    if (twounderlineCheckbox.checked) {
+      transformedText = addUnderline2(transformedText);
+    }
+    if (decorativeFontCheckbox1.checked) {
+      transformedText = applyDecorativeFont1(transformedText);
+    }
+    if (decorativeFontCheckbox2.checked) {
+      transformedText = applyDecorativeFont2(transformedText);
+    }
     outputElement.value = transformedText;
   }
-
   function transformToUpperCase(text) {
     return text.toUpperCase();
   }
-
   function addUnderstrikethrough(text) {
     var result = "";
     for (var i = 0; i < text.length; i++) {
@@ -129,15 +135,13 @@
     }
     return result;
   }
-
   function addUnderline1(text) {
     var result = "";
     for (var i = 0; i < text.length; i++) {
-      result += text[i] + '\uabed'; // 使用 Unicode 字符 '\uabed' 添加下划线样式
+      result += '\uabed' + text[i] + '\uabed'; // 使用 Unicode 字符 '\uabed' 添加下划线样式
     }
     return result;
   }
-
   function addUnderline2(text) {
     var result = "";
     for (var i = 0; i < text.length; i++) {
@@ -145,7 +149,6 @@
     }
     return result;
   }
-
   function applyDecorativeFont1(text) {
     var result = "";
     for (var i = 0; i < text.length; i++) {
@@ -155,7 +158,6 @@
     }
     return result;
   }
-
   function applyDecorativeFont2(text) {
     var result = "";
     for (var i = 0; i < text.length; i++) {
@@ -165,9 +167,7 @@
     }
     return result;
   }
-
   function getDecorativeChar1(char) {
-    // 字符映射，根据原始字符返回装饰性字符
     switch (char.toLowerCase()) {
       case 'a':
         return '𝒜';
@@ -225,9 +225,7 @@
         return char;
     }
   }
-
   function getDecorativeChar2(char) {
-    // 字符映射，根据原始字符返回装饰性字符
     switch (char.toLowerCase()) {
       case 'a':
         return '𝘼';
@@ -285,7 +283,17 @@
         return char;
     }
   }
+  // 清空按钮点击事件
+  function clearText() {
+    document.getElementById("inputText").value = "";
+    document.getElementById("outputText").value = "";
+  }
+  // 复制按钮点击事件
+  function copyText() {
+    var outputElement = document.getElementById("outputText");
+    outputElement.select();
+    document.execCommand("copy");
+  }
 </script>
-
 </body>
 </html>
