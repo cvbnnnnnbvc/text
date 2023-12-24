@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>字符装饰</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    label {
+      margin-bottom: 5px;
+    }
+
+    .options {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .options input {
+      margin-right: 5px;
+      width: auto;
+    }
+
+    input {
+      width: 300px;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<label for="inputText">输入文本：</label>
+<input type="text" id="inputText">
+
+<div class="options">
+  <label><input type="checkbox" id="toUpperCaseCheckbox"> 英文大写</label>
+  <label><input type="checkbox" id="strikethroughlineCheckbox"> 添加删除线</label>
+  <label><input type="checkbox" id="underlineCheckbox"> 添加下划线</label>
+  <label><input type="checkbox" id="twounderlineCheckbox"> 添加圆圈</label>
+</div>
+选择英文的字体样式：
+<!-- 添加单选框和相关的label元素 -->
+<div class="options">
+  <label><input type="radio" name="fontStyle" id="noneFontCheckbox" checked> 无</label>
+  <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox1"> 样式“𝒜”</label>
+  <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox2"> 样式“𝘼”</label>
+</div>
+
+<button onclick="transformText()">转换</button>
+
+<label for="outputText">转换后的文本：</label>
+<input type="text" id="outputText" readonly>
+
+<script>
+  document.getElementById("noneFontCheckbox").addEventListener("change", function() {
+    // 如果选择“无”，则将其他所有选项的勾选状态取消
+    if (this.checked) {
+      document.getElementById("toUpperCaseCheckbox").checked = false;
+      document.getElementById("strikethroughlineCheckbox").checked = false;
+      document.getElementById("underlineCheckbox").checked = false;
+      document.getElementById("twounderlineCheckbox").checked = false;
+    }
+  });
+
+  function transformText() {
+    var inputElement = document.getElementById("inputText");
+    var outputElement = document.getElementById("outputText");
+    var toUpperCaseCheckbox = document.getElementById("toUpperCaseCheckbox");
+    var strikethroughlineCheckbox = document.getElementById("strikethroughlineCheckbox");
+    var underlineCheckbox = document.getElementById("underlineCheckbox");
+    var twounderlineCheckbox = document.getElementById("twounderlineCheckbox");
+    var noneFontCheckbox = document.getElementById("noneFontCheckbox");
+    var decorativeFontCheckbox1 = document.getElementById("decorativeFontCheckbox1");
+    var decorativeFontCheckbox2 = document.getElementById("decorativeFontCheckbox2");
+
+    var inputText = inputElement.value;
+    var transformedText = inputText;
+
+  
+      if (toUpperCaseCheckbox.checked) {
+        transformedText = transformToUpperCase(transformedText);
+      }
+
+      if (strikethroughlineCheckbox.checked) {
+        transformedText = addUnderstrikethrough(transformedText);
+      }
+
+      if (underlineCheckbox.checked) {
+        transformedText = addUnderline1(transformedText);
+      }
+
+      if (twounderlineCheckbox.checked) {
+        transformedText = addUnderline2(transformedText);
+      }
+
+      if (decorativeFontCheckbox1.checked) {
+        transformedText = applyDecorativeFont1(transformedText);
+      }
+
+      if (decorativeFontCheckbox2.checked) {
+        transformedText = applyDecorativeFont2(transformedText);
+      }
+    
+
+    outputElement.value = transformedText;
+  }
+
+  function transformToUpperCase(text) {
+    return text.toUpperCase();
+  }
+
+  function addUnderstrikethrough(text) {
+    var result = "";
+    for (var i = 0; i < text.length; i++) {
+      result += text[i] +'\u0336'; // 使用 Unicode 字符 '\u0333' 添加删除线
+    }
+    return result;
+  }
+
+  function addUnderline1(text) {
+    var result = "";
+    for (var i = 0; i < text.length; i++) {
+      result += text[i] + '\uabed'; // 使用 Unicode 字符 '\uabed' 添加下划线样式
+    }
+    return result;
+  }
+
+  function addUnderline2(text) {
+    var result = "";
+    for (var i = 0; i < text.length; i++) {
+      result += text[i] + '\u20dd'; // 使用 Unicode 字符 '\u20dd' 添加圆圈样式
+    }
+    return result;
+  }
+
+  function applyDecorativeFont1(text) {
+    var result = "";
+    for (var i = 0; i < text.length; i++) {
+      var originalChar = text[i];
+      var transformedChar = getDecorativeChar1(originalChar);
+      result += transformedChar;
+    }
+    return result;
+  }
+
+  function applyDecorativeFont2(text) {
+    var result = "";
+    for (var i = 0; i < text.length; i++) {
+      var originalChar = text[i];
+      var transformedChar = getDecorativeChar2(originalChar);
+      result += transformedChar;
+    }
+    return result;
+  }
+
+  function getDecorativeChar1(char) {
+    // 字符映射，根据原始字符返回装饰性字符
+    switch (char.toLowerCase()) {
+      case 'a':
+        return '𝒜';
+      case 'b':
+        return '𝔅';
+      case 'c':
+        return '𝒞';
+      case 'd':
+        return '𝒟';
+      case 'e':
+        return '𝔼';
+      case 'f':
+        return '𝒻';
+      case 'g':
+        return '𝒢';
+      case 'h':
+        return '𝐻';
+      case 'i':
+        return '𝐼';
+      case 'j':
+        return '𝒥';
+      case 'k':
+        return '𝒦';
+      case 'l':
+        return '𝐿';
+      case 'm':
+        return '𝑀';
+      case 'n':
+        return '𝒩';
+      case 'o':
+        return '𝒪';
+      case 'p':
+        return '𝒫';
+      case 'q':
+        return '𝒬';
+      case 'r':
+        return '𝑅';
+      case 's':
+        return '𝒮';
+      case 't':
+        return '𝒯';
+      case 'u':
+        return '𝒰';
+      case 'v':
+        return '𝒱';
+      case 'w':
+        return '𝒲';
+      case 'x':
+        return '𝒳';
+      case 'y':
+        return '𝒴';
+      case 'z':
+        return '𝒵';
+      default:
+        return char;
+    }
+  }
+
+  function getDecorativeChar2(char) {
+    // 字符映射，根据原始字符返回装饰性字符
+    switch (char.toLowerCase()) {
+      case 'a':
+        return '𝘼';
+      case 'b':
+        return '𝘽';
+      case 'c':
+        return '𝘾';
+      case 'd':
+        return '𝘿';
+      case 'e':
+        return '𝙀';
+      case 'f':
+        return '𝙁';
+      case 'g':
+        return '𝙂';
+      case 'h':
+        return '𝙃';
+      case 'i':
+        return '𝙄';
+      case 'j':
+        return '𝙅';
+      case 'k':
+        return '𝙆';
+      case 'l':
+        return '𝙇';
+      case 'm':
+        return '𝙈';
+      case 'n':
+        return '𝙉';
+      case 'o':
+        return '𝙊';
+      case 'p':
+        return '𝙋';
+      case 'q':
+        return '𝙌';
+      case 'r':
+        return '𝙍';
+      case 's':
+        return '𝙎';
+      case 't':
+        return '𝙏';
+      case 'u':
+        return '𝙐';
+      case 'v':
+        return '𝙑';
+      case 'w':
+        return '𝙒';
+      case 'x':
+        return '𝙓';
+      case 'y':
+        return '𝙔';
+      case 'z':
+        return '𝙕';
+      default:
+        return char;
+    }
+  }
+</script>
+
+</body>
+</html>
