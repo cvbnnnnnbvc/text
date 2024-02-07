@@ -136,13 +136,13 @@
 <div class="options">
   <label><input type="checkbox" id="toUpperCaseCheckbox"> 英文大写</label>
   <label><input type="checkbox" id="strikethroughlineCheckbox"> 添加删除线</label>
-  <label><input type="checkbox" id="underlineCheckbox"> 添加下划线</label>
+  <label><input type="checkbox" id="underlineCheckbox"> 添加划线</label>
   <label><input type="checkbox" id="twounderlineCheckbox"> 添加圆圈</label>
 </div>
 选择英文的字体样式：
 <div class="options">
   <label><input type="radio" name="fontStyle" id="noneFontCheckbox" checked> 无</label>
-  <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox1"> 样式“𝒜”</label>
+  <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox1"> 样式“𝙰|𝚊”</label>
   <label><input type="radio" name="fontStyle" id="decorativeFontCheckbox2"> 样式“𝘼”</label>
 </div>
 <button onclick="transformText()" id="Convert">转换</button>
@@ -234,59 +234,112 @@
     return result;
   }
   function getDecorativeChar1(char) {
-    switch (char.toLowerCase()) {
+    switch (char) {
       case 'a':
-        return '𝒜';
+        return '𝚊';
       case 'b':
-        return '𝔅';
+        return '𝚋';
       case 'c':
-        return '𝒞';
+        return '𝚌';
       case 'd':
-        return '𝒟';
+        return '𝚍';
       case 'e':
-        return '𝔼';
+        return '𝚎';
       case 'f':
-        return '𝒻';
+        return '𝚏';
       case 'g':
-        return '𝒢';
+        return '𝚐';
       case 'h':
-        return '𝐻';
+        return '𝚑';
       case 'i':
-        return '𝐼';
+        return '𝚒';
       case 'j':
-        return '𝒥';
+        return '𝚓';
       case 'k':
-        return '𝒦';
+        return '𝚔';
       case 'l':
-        return '𝐿';
+        return '𝚕';
       case 'm':
-        return '𝑀';
+        return '𝚖';
       case 'n':
-        return '𝒩';
+        return '𝚗';
       case 'o':
-        return '𝒪';
+        return '𝚘';
       case 'p':
-        return '𝒫';
+        return '𝚙';
       case 'q':
-        return '𝒬';
+        return '𝚚';
       case 'r':
-        return '𝑅';
+        return '𝚛';
       case 's':
-        return '𝒮';
+        return '𝚜';
       case 't':
-        return '𝒯';
+        return '𝚝';
       case 'u':
-        return '𝒰';
+        return '𝚞';
       case 'v':
-        return '𝒱';
+        return '𝚟';
       case 'w':
-        return '𝒲';
+        return '𝚠';
       case 'x':
-        return '𝒳';
+        return '𝚡';
       case 'y':
-        return '𝒴';
+        return '𝚢';
       case 'z':
-        return '𝒵';
+        return '𝚣';
+      
+      case 'A':
+        return '𝙰';
+      case 'B':
+        return '𝙱';
+      case 'C':
+        return '𝙲';
+      case 'D':
+        return '𝙳';
+      case 'E':
+        return '𝙴';
+      case 'F':
+        return '𝙵';
+      case 'G':
+        return '𝙶';
+      case 'H':
+        return '𝙷';
+      case 'I':
+        return '𝙸';
+      case 'J':
+        return '𝙹';
+      case 'K':
+        return '𝙺';
+      case 'L':
+        return '𝙻';
+      case 'M':
+        return '𝙼';
+      case 'N':
+        return '𝙽';
+      case 'O':
+        return '𝙾';
+      case 'P':
+        return '𝙿';
+      case 'Q':
+        return '𝚀';
+      case 'R':
+        return '𝚁';
+      case 'S':
+        return '𝚂';
+      case 'T':
+        return '𝚃';
+      case 'U':
+        return '𝚄';
+      case 'V':
+        return '𝚅';
+      case 'W':
+        return '𝚆';
+      case 'X':
+        return '𝚇';
+      case 'Y':
+        return '𝚈';
+      case 'Z':
+        return '𝚉';
       default:
         return char;
     }
