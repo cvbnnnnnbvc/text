@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>汉字转拼音</title>
+    <title>汉字转拼音，带词库</title>
     <link rel="stylesheet" type="text/css" href="simple-input-method/simple-input-method.css">
     <style type="text/css">
         body {
@@ -236,21 +236,30 @@
     });
 
     document.getElementById('copy-button').addEventListener('click', function () {
-        var resultElement = document.getElementById('result');
-        var text = resultElement.innerText;
-        navigator.clipboard.writeText(text)
-        .then(function() {
-            // 复制成功后的处理
-            document.getElementById('copy-success').style.display = 'block';
-            setTimeout(function () {
-                document.getElementById('copy-success').style.display = 'none';
-            }, 1000);
-        })
-        .catch(function(err) {
-            // 复制失败后的处理
-            console.error('Failed to copy text: ', err);
-        });
-    });
+    var resultElement = document.getElementById('result');
+    var range = document.createRange();
+    range.selectNode(resultElement);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    
+    // 获取纯文本内容并替换换行符
+    var text = resultElement.innerText.replace(/\n|\r/g, ' ');
+    
+    // 创建临时元素用于复制文本
+    var tempElement = document.createElement('textarea');
+    tempElement.value = text;
+    document.body.appendChild(tempElement);
+    tempElement.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempElement);
+    
+    // 显示复制成功提示
+    document.getElementById('copy-success').style.display = 'block';
+    setTimeout(function () {
+        document.getElementById('copy-success').style.display = 'none';
+    }, 1000);
+});
+
 
 
 
