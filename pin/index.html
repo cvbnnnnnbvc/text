@@ -2,6 +2,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>带词库识别多音字的汉字转拼音</title>
     <link rel="stylesheet" type="text/css" href="simple-input-method/simple-input-method.css">
     <style type="text/css">
@@ -40,7 +41,7 @@
             color: white;
             padding: 2px 8px;
             border-radius: 5px;
-            font-size: 40px;
+            font-size: 30px;
             line-height: 1.5;
             text-shadow: 1px 1px 1px black;
             text-align: center;
@@ -105,12 +106,12 @@
         }
 
         #copy-success {
-            color: rgb(0, 77, 59);
+            color: rgb(17, 149, 169);
             margin-top: 5px;
             display: none;
         }
 		.box {
-			width: 50%;
+			width: 400px;
 			background-color: #505050;
 			text-align: center;
 			margin: 0 auto; 
@@ -121,7 +122,7 @@
             border-radius: 8px;
 		}
 		.box > * {
-			margin: 0 5%; 
+			margin: 0 10px; 
 		}
 
         /* 隐藏原始的单选按钮 */
@@ -164,6 +165,8 @@
             margin-bottom: 20px;
             padding-top: 5px;
             padding-bottom: 5px;
+            padding-left: 20px;
+            padding-right: 20px;
             border-radius: 8px;
         }
     </style>
@@ -222,7 +225,7 @@
                 html += val;
             });
         }
-        document.getElementById('result').innerHTML = html;
+    document.getElementById('result').innerHTML = html;
     }
 
     document.getElementById('test').addEventListener('input', getPinyin);
@@ -233,18 +236,29 @@
     });
 
     document.getElementById('copy-button').addEventListener('click', function () {
-        var resultElement = document.getElementById('result');
-        var range = document.createRange();
-        range.selectNode(resultElement);
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(range);
-        document.execCommand('copy');
-        window.getSelection().removeAllRanges();
+    var resultElement = document.getElementById('result');
+    var range = document.createRange();
+    range.selectNode(resultElement);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    
+    // 获取文本内容
+    var text = resultElement.innerText;
+    // 复制文本到剪贴板
+    navigator.clipboard.writeText(text).then(function() {
+        // 复制成功后的处理
         document.getElementById('copy-success').style.display = 'block';
         setTimeout(function () {
             document.getElementById('copy-success').style.display = 'none';
         }, 1000);
+    }).catch(function(err) {
+        // 复制失败后的处理
+        console.error('Failed to copy text: ', err);
     });
+    
+    window.getSelection().removeAllRanges();
+});
+
 
     document.getElementById('clear-button').addEventListener('click', function () {
         document.getElementById('test').value = '';
