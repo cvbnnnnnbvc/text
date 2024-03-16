@@ -14,18 +14,11 @@
         background-color: rgb(47, 47, 47);
         color: #e8e8e8;
         flex-direction: column; /* 添加这一行以垂直排列元素 */
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto; /* 通过将 margin 设置为 auto 来实现居中对齐 */
-        width: fit-content; /* 或者设置一个适当的宽度来限制 body 的宽度 */
-        height: fit-content; /* 或者设置一个适当的高度来限制 body 的高度 */
     }
 
     #box {
         background-color: rgb(131, 131, 131);
+        overflow: hidden; /* 禁用滚动 */
     }
     #drag-box {
         position: absolute;
@@ -81,36 +74,38 @@
 <body>
     <div id="box">
         <div id="drag-box"></div>
-    <p>●○ 字符点阵</p>
-<div id="content">
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-○○○○○○○○○○○○○○○
-</div>
-<div id="input-container">
-    <label for="charInput">替换为: </label>
-    <input type="text" id="charInput" placeholder="输入字符..">
-    <button onclick="copyPreText()">复制文本</button>
-    <button onclick="resetText()" id="Cancel">重置</button>
-</div>
+        <p>●○ 字符点阵填充</p>
+        <div id="content">
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+            ○○○○○○○○○○○○○○○
+        </div>
+        <div id="input-container">
+            <label for="charInput">替换为: </label>
+            <input type="text" id="charInput" placeholder="输入字符.." value="●">
+            <button onclick="copyPreText()">复制文本</button>
+            <button onclick="resetText()" id="Cancel">重置</button>
+        </div>
     </div>
+    <p>使用说明：触摸拖拽出方框，方框选中点阵</p>
+
 <script>
     const dragBox = document.getElementById('drag-box');
     let isDragging = false;
     let startX, startY;
-    let selectedCharacter = '';
+    let selectedCharacter = '●';
     let previousText = ''; // 添加一个变量来存储上一个操作之前 pre 元素中的文本内容
 
     document.addEventListener('mousedown', handleMouseDown);
@@ -224,8 +219,13 @@
         document.body.removeChild(textArea);
     }
     function resetText() {
-    window.location.reload();
-}
+        window.location.reload();
+    }
+
+    // 禁用触摸滑动
+    document.addEventListener('touchmove', function(event) {
+        event.preventDefault();
+    }, { passive: false });
 </script>
 </body>
 </html>
