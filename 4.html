@@ -9,37 +9,43 @@
         font-size: 15px;
         letter-spacing: 1px;
         font-family: monospace;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         height: 100vh;
         margin: 0;
         background-color: rgb(47, 47, 47);
-        color: #d3d3d3;
+        color: #e8e8e8;
         flex-direction: column; /* 添加这一行以垂直排列元素 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto; /* 通过将 margin 设置为 auto 来实现居中对齐 */
+        width: fit-content; /* 或者设置一个适当的宽度来限制 body 的宽度 */
+        height: fit-content; /* 或者设置一个适当的高度来限制 body 的高度 */
     }
 
+    #box {
+        background-color: rgb(131, 131, 131);
+    }
     #drag-box {
         position: absolute;
         display: none;
         border: 2px solid blue;
         background-color: rgba(0, 0, 255, 0.2);
+        position: fixed;
     }
 
     #content {
+        margin: 10px 10px;
         font-size: 20px;
         font-weight: bold;
         user-select: none; /* 禁止文字复制 */
         background-color: aqua;
-        padding: 15px;
+        padding: 5px;
         border-radius: 3px;
         color: #000;
         line-height: 1;
         text-align: center;
-    }
-
-    #box {
-        position: fixed;
     }
     .selected {
         color: rgb(255, 0, 242);
@@ -73,9 +79,9 @@
 </style>
 </head>
 <body>
-<div id="drag-box"></div>
-<div id="box">
-    <p>●○</p>
+    <div id="box">
+        <div id="drag-box"></div>
+    <p>●○ 字符点阵</p>
 <div id="content">
 ○○○○○○○○○○○○○○○
 ○○○○○○○○○○○○○○○
@@ -99,7 +105,7 @@
     <button onclick="copyPreText()">复制文本</button>
     <button onclick="resetText()" id="Cancel">重置</button>
 </div>
-</div>
+    </div>
 <script>
     const dragBox = document.getElementById('drag-box');
     let isDragging = false;
