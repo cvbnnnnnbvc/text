@@ -6,6 +6,9 @@
 <title>字符填充|点阵</title>
 <style>
     body {
+        font-size: 15px;
+        letter-spacing: 1px;
+        font-family: monospace;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -24,20 +27,22 @@
     }
 
     #content {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: bold;
         user-select: none; /* 禁止文字复制 */
         background-color: aqua;
-        padding: 20px 20px;
+        padding: 15px;
         border-radius: 3px;
-        white-space: pre-wrap; /* 保留换行符 */
         color: #000;
-        overflow: auto; /* 添加这一行以启用滚动条 */
+        line-height: 1;
+        text-align: center;
     }
 
+    #box {
+        position: fixed;
+    }
     .selected {
-        color: rgb(0, 255, 149);
-        background-color: black;
+        color: rgb(255, 0, 242);
     }
 
     #input-container {
@@ -62,13 +67,16 @@
         transition: background-color 0.3s;
         margin-bottom: 10px; 
     }
+    #Cancel {
+        background-color: #38545e;
+    }
 </style>
 </head>
 <body>
-<p>●○</p>
 <div id="drag-box"></div>
-
-<pre id="content">
+<div id="box">
+    <p>●○</p>
+<div id="content">
 ○○○○○○○○○○○○○○○
 ○○○○○○○○○○○○○○○
 ○○○○○○○○○○○○○○○
@@ -84,13 +92,13 @@
 ○○○○○○○○○○○○○○○
 ○○○○○○○○○○○○○○○
 ○○○○○○○○○○○○○○○
-</pre>
-
+</div>
 <div id="input-container">
     <label for="charInput">替换为: </label>
-    <input type="text" id="charInput" placeholder="输入..">
+    <input type="text" id="charInput" placeholder="输入字符..">
     <button onclick="copyPreText()">复制文本</button>
-    <button onclick="resetText()">重置</button>
+    <button onclick="resetText()" id="Cancel">重置</button>
+</div>
 </div>
 <script>
     const dragBox = document.getElementById('drag-box');
@@ -104,7 +112,7 @@
 
     function handleMouseDown(event) {
         if (event.button && event.button !== 0) return;
-        if (!event.target.closest('pre')) return; 
+        if (!event.target.closest('#content')) return; 
         isDragging = true;
         startX = event.clientX || event.touches[0].clientX;
         startY = event.clientY || event.touches[0].clientY;
