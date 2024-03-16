@@ -98,8 +98,12 @@
             <button onclick="copyPreText()">复制文本</button>
             <button onclick="resetText()" id="Cancel">重置</button>
         </div>
+        <div id="radio-container">
+            <input type="checkbox" id="autoFill" onchange="toggleAutoFill()" checked>
+            <label for="autoFill">触摸模式</label>
+        </div>
     </div>
-    <p>使用说明：触摸拖拽出方框，方框选中点阵</p>
+    <p>其它模式：点击画布拖拽出方框，方框选中点阵再释放可填充</p>
 
 <script>
     const dragBox = document.getElementById('drag-box');
@@ -107,6 +111,7 @@
     let startX, startY;
     let selectedCharacter = '●';
     let previousText = ''; // 添加一个变量来存储上一个操作之前 pre 元素中的文本内容
+    let autoFillEnabled = true;
 
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('touchstart', handleMouseDown);
@@ -121,7 +126,7 @@
         dragBox.style.top = startY + 'px';
         dragBox.style.width = '0px';
         dragBox.style.height = '0px';
-        dragBox.style.display = 'block';
+        dragBox.style.display = autoFillEnabled ? 'none' : 'block';
         clearSelection();
         event.preventDefault(); // 防止触摸滚动
     }
@@ -140,21 +145,33 @@
         dragBox.style.left = (currentX < startX) ? (startX - width) + 'px' : startX + 'px';
         dragBox.style.top = (currentY < startY) ? (startY - height) + 'px' : startY + 'px';
 
-        const content = document.getElementById('content');
-        const spans = content.querySelectorAll('span');
-        for (let i = 0; i < spans.length; i++) {
-            const rect = spans[i].getBoundingClientRect();
-            const spanX = rect.left + window.scrollX;
-            const spanY = rect.top + window.scrollY;
-            if (
-                spanX < Math.max(startX, currentX) &&
-                spanX + rect.width > Math.min(startX, currentX) &&
-                spanY < Math.max(startY, currentY) &&
-                spanY + rect.height > Math.min(startY, currentY)
-            ) {
-                spans[i].classList.add('selected');
-            } else {
-                spans[i].classList.remove('selected');
+        if (autoFillEnabled) {
+            const spans = document.querySelectorAll('#content > span');
+            for (const span of spans) {
+                const rect = span.getBoundingClientRect();
+                if (
+                    currentX >= rect.left && currentX <= rect.right &&
+                    currentY >= rect.top && currentY <= rect.bottom
+                ) {
+                    span.textContent = selectedCharacter;
+                }
+            }
+        } else {
+            const spans = document.querySelectorAll('#content > span');
+            for (const span of spans) {
+                const rect = span.getBoundingClientRect();
+                const spanX = rect.left + window.scrollX;
+                const spanY = rect.top + window.scrollY;
+                if (
+                    spanX < Math.max(startX, currentX) &&
+                    spanX + rect.width > Math.min(startX, currentX) &&
+                    spanY < Math.max(startY, currentY) &&
+                    spanY + rect.height > Math.min(startY, currentY)
+                ) {
+                    span.classList.add('selected');
+                } else {
+                    span.classList.remove('selected');
+                }
             }
         }
         event.preventDefault(); // 防止触摸滚动
@@ -165,8 +182,10 @@
 
     function handleMouseUp(event) {
         isDragging = false;
-        dragBox.style.display = 'none';
-        updateSelectedCharacters();
+        dragBox.style.display = autoFillEnabled ? 'none' : 'block';
+        if (!autoFillEnabled) {
+            updateSelectedCharacters();
+        }
     }
 
     function clearSelection() {
@@ -195,7 +214,9 @@
     const charInput = document.getElementById('charInput');
     charInput.addEventListener('input', () => {
         selectedCharacter = charInput.value.trim();
-        updateSelectedCharacters();
+        if (!autoFillEnabled) {
+            updateSelectedCharacters();
+        }
     });
 
     function updateSelectedCharacters() {
@@ -220,6 +241,11 @@
     }
     function resetText() {
         window.location.reload();
+    }
+
+    function toggleAutoFill() {
+        autoFillEnabled = !autoFillEnabled;
+        dragBox.style.display = autoFillEnabled ? 'none' : 'block';
     }
 
     // 禁用触摸滑动
