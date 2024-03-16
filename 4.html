@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>字符填充|点阵</title>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: rgb(47, 47, 47);
+        color: #d3d3d3;
+        flex-direction: column; /* 添加这一行以垂直排列元素 */
+    }
+
+    #drag-box {
+        position: absolute;
+        display: none;
+        border: 2px solid blue;
+        background-color: rgba(0, 0, 255, 0.2);
+    }
+
+    #content {
+        font-size: 18px;
+        font-weight: bold;
+        user-select: none; /* 禁止文字复制 */
+        background-color: aqua;
+        padding: 20px 20px;
+        border-radius: 3px;
+        white-space: pre-wrap; /* 保留换行符 */
+        color: #000;
+        overflow: auto; /* 添加这一行以启用滚动条 */
+    }
+
+    .selected {
+        color: rgb(0, 255, 149);
+        background-color: black;
+    }
+
+    #input-container {
+        margin-top: 20px;
+    }
+
+    input[type="text"]:focus {
+            border-color: #66afe9;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    }
+
+    button {
+        padding: 4px 5px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #4c77af;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-bottom: 10px; 
+    }
+</style>
+</head>
+<body>
+<p>●○</p>
+<div id="drag-box"></div>
+
+<pre id="content">
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+○○○○○○○○○○○○○○○
+</pre>
+
+<div id="input-container">
+    <label for="charInput">替换为: </label>
+    <input type="text" id="charInput" placeholder="输入..">
+    <button onclick="copyPreText()">复制文本</button>
+    <button onclick="resetText()">重置</button>
+</div>
+<script>
+    const dragBox = document.getElementById('drag-box');
+    let isDragging = false;
+    let startX, startY;
+    let selectedCharacter = '';
+    let previousText = ''; // 添加一个变量来存储上一个操作之前 pre 元素中的文本内容
+
+    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('touchstart', handleMouseDown);
+
+    function handleMouseDown(event) {
+        if (event.button && event.button !== 0) return;
+        if (!event.target.closest('pre')) return; 
+        isDragging = true;
+        startX = event.clientX || event.touches[0].clientX;
+        startY = event.clientY || event.touches[0].clientY;
+        dragBox.style.left = startX + 'px';
+        dragBox.style.top = startY + 'px';
+        dragBox.style.width = '0px';
+        dragBox.style.height = '0px';
+        dragBox.style.display = 'block';
+        clearSelection();
+        event.preventDefault(); // 防止触摸滚动
+    }
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('touchmove', handleMouseMove);
+
+    function handleMouseMove(event) {
+        if (!isDragging) return;
+        const currentX = event.clientX || event.touches[0].clientX;
+        const currentY = event.clientY || event.touches[0].clientY;
+        const width = Math.abs(currentX - startX);
+        const height = Math.abs(currentY - startY);
+        dragBox.style.width = width + 'px';
+        dragBox.style.height = height + 'px';
+        dragBox.style.left = (currentX < startX) ? (startX - width) + 'px' : startX + 'px';
+        dragBox.style.top = (currentY < startY) ? (startY - height) + 'px' : startY + 'px';
+
+        const content = document.getElementById('content');
+        const spans = content.querySelectorAll('span');
+        for (let i = 0; i < spans.length; i++) {
+            const rect = spans[i].getBoundingClientRect();
+            const spanX = rect.left + window.scrollX;
+            const spanY = rect.top + window.scrollY;
+            if (
+                spanX < Math.max(startX, currentX) &&
+                spanX + rect.width > Math.min(startX, currentX) &&
+                spanY < Math.max(startY, currentY) &&
+                spanY + rect.height > Math.min(startY, currentY)
+            ) {
+                spans[i].classList.add('selected');
+            } else {
+                spans[i].classList.remove('selected');
+            }
+        }
+        event.preventDefault(); // 防止触摸滚动
+    }
+
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchend', handleMouseUp);
+
+    function handleMouseUp(event) {
+        isDragging = false;
+        dragBox.style.display = 'none';
+        updateSelectedCharacters();
+    }
+
+    function clearSelection() {
+        const selectedElements = document.querySelectorAll('.selected');
+        selectedElements.forEach(element => {
+            element.classList.remove('selected');
+        });
+    }
+
+    const content = document.getElementById('content');
+    const text = content.innerText;
+    content.innerHTML = '';
+    let lineCounter = 0;
+    for (let i = 0; i < text.length; i++) {
+        if (lineCounter >= 15 && text[i] === ' ') {
+            content.appendChild(document.createElement('br'));
+            lineCounter = 0;
+        } else {
+            const span = document.createElement('span');
+            span.textContent = text[i];
+            content.appendChild(span);
+            if (text[i] !== '\n') lineCounter++;
+        }
+    }
+
+    const charInput = document.getElementById('charInput');
+    charInput.addEventListener('input', () => {
+        selectedCharacter = charInput.value.trim();
+        updateSelectedCharacters();
+    });
+
+    function updateSelectedCharacters() {
+        if (selectedCharacter === '') return;
+        const selectedElements = document.querySelectorAll('.selected');
+        selectedElements.forEach(element => {
+            if (element.textContent !== ' ') {
+                element.textContent = selectedCharacter;
+            }
+        });
+        previousText = document.getElementById('content').innerText; // 保存当前 pre 元素中的文本内容
+    }
+
+    function copyPreText() {
+        const content = document.getElementById('content');
+        const textArea = document.createElement('textarea');
+        textArea.value = content.innerText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+    }
+    function resetText() {
+    window.location.reload();
+}
+</script>
+</body>
+</html>
