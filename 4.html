@@ -7,7 +7,7 @@
 <style>
     body {
         font-size: 15px;
-        letter-spacing: 1px;
+        letter-spacing: 5px;
         font-family: monospace;
         height: 100vh;
         margin: 0;
@@ -30,14 +30,14 @@
 
     #content {
         margin: 10px 10px;
-        font-size: 20px;
+        font-size: 13px;
         font-weight: bold;
-        user-select: none; /* 禁止文字复制 */
-        background-color: aqua;
+        user-select: none;
+        background-color: rgb(177, 255, 255);
         padding: 5px;
         border-radius: 3px;
         color: #000;
-        line-height: 1;
+        line-height: 1.8; /* 设置行高为1.5倍字体大小 */
         text-align: center;
     }
     .selected {
@@ -103,7 +103,7 @@
             <label for="autoFill">触摸模式</label>
         </div>
     </div>
-    <p>其它模式：点击画布拖拽出方框，方框选中点阵再释放可填充</p>
+    <p>其它模式：点击画布拖拽出方框，方框选中点阵再释放可填充。</p>
 
 <script>
     const dragBox = document.getElementById('drag-box');
