@@ -40,48 +40,45 @@ body {
 fetchTextFiles();
 
 function fetchTextFiles() {
-    fetchFilesInDirectory('text')
-        .then(files => {
-            const txtFiles = files.filter(file => /\.txt$/.test(file));
-            if (txtFiles.length > 0) {
-                const promises = txtFiles.map(txtFile => {
-                    return fetch(`text/${txtFile}`)
-                        .then(response => response.text())
-                        .then(text => {
-                            return { fileName: txtFile, content: text };
-                        });
-                });
-                Promise.all(promises)
-                    .then(contents => {
-                        const embeddedTexts = document.getElementById('embeddedTexts');
-                        contents.forEach(content => {
-                            const preElement = document.createElement('pre');
-                            preElement.classList.add('greenBox'); 
-                            preElement.innerHTML = `<span class="txtFileName">${content.fileName}:</span><br><div class="txtFileContent">${content.content}</div>`;
-                            embeddedTexts.appendChild(preElement);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('获取文本文件内容时出错：', error);
-                    });
-            } else {
-                console.error('未找到以 .txt 结尾的文本文件。');
-            }
+    const baseUrl = 'https://cvbnnnnnbvc.github.io/text/message/text/';
+    const promises = [];
+    
+    for (let i = 0; i <= 100; i++) {
+        const txtFile = `${baseUrl}${i}.txt`;
+        promises.push(
+            fetch(txtFile)
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        return Promise.reject(`文件 ${i}.txt 不存在`);
+                    }
+                })
+                .then(text => {
+                    return { fileName: `${i}.txt`, content: text };
+                })
+                .catch(error => {
+                    console.error(error);
+                    return null; // 如果文件不存在，则返回 null
+                })
+        );
+    }
+    
+    Promise.all(promises)
+        .then(contents => {
+            const embeddedTexts = document.getElementById('embeddedTexts');
+            contents.forEach(content => {
+                if (content) {
+                    const preElement = document.createElement('pre');
+                    preElement.classList.add('greenBox'); 
+                    preElement.innerHTML = `<span class="txtFileName">${content.fileName}:</span><br><div class="txtFileContent">${content.content}</div>`;
+                    embeddedTexts.appendChild(preElement);
+                }
+            });
         })
         .catch(error => {
-            console.error('获取文件列表时出错：', error);
+            console.error('获取文本文件内容时出错：', error);
         });
-}
-
-async function fetchFilesInDirectory(directory) {
-    const response = await fetch(directory);
-    const text = await response.text();
-    const matches = text.match(/href="([^"]+)"/g);
-    if (matches) {
-        return matches.map(match => decodeURIComponent(match.replace('href="', '').replace('"', '')));
-    } else {
-        return [];
-    }
 }
 </script>
 </body>
