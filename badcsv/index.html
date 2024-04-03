@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑话搜索页</title>
+    <style>
+        body {
+            background-color: #272727;
+        }
+        h3 {
+            background-color: rgb(60, 60, 60);
+            color: #eaeaea;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #b3b3b3;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #b4b5e1;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            padding: 8px;
+            margin-right: 5px;
+        }
+
+        .search-btn {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: #45a049;
+        }
+
+        .search-result {
+            margin-top: 10px;
+            text-align: center;
+            background-color: #4c51af;
+            color: #fafafa;
+            padding: 10px;
+        }
+        button {
+            padding: 8px 10px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4c77af;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px; 
+        }
+
+        button:hover {
+            background-color:#215ba7;
+        }
+        .search-input:focus {
+            border-color: #66afe9;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tbody tr {
+            background-color: #f2f2f2; 
+        }
+        h4 {
+            color: #ebebeb;
+        }
+    </style>
+</head>
+<body>
+    <h3>黑话搜索页</h3>
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="输入要搜索的内容">
+        <button onclick="search()">搜索</button>
+    </div>
+    <div id="searchResult" class="search-result"></div>
+    <table id="csvTable">
+        <!-- 表头行 -->
+        <thead>
+            <tr></tr>
+        </thead>
+        <!-- 数据行 -->
+        <tbody></tbody>
+    </table>
+    <h4>持续更新中..</h4>
+    <script>
+        // 读取CSV文件并将其转换为HTML表格
+        function loadCSV() {
+            var csvFile = "0.csv"; // CSV文件名
+            var table = document.getElementById("csvTable");
+            var tbody = table.getElementsByTagName("tbody")[0];
+            // 发送GET请求读取CSV文件
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", csvFile);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var lines = xhr.responseText.split("\n");
+                    for (var i = 0; i < lines.length-1; i++) {
+                        var cells = lines[i].split(",");
+                        if (i === 0) { // 第一行作为表头
+                            var headerRow = table.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                            for (var j = 0; j < cells.length; j++) {
+                                var th = document.createElement("th");
+                                th.appendChild(document.createTextNode(cells[j]));
+                                headerRow.appendChild(th);
+                            }
+                        } else { // 其他行作为数据行
+                            var row = document.createElement("tr"); // 创建一个新的行元素
+                            for (var k = 0; k < cells.length; k++) {
+                                var cell = document.createElement("td");
+                                cell.appendChild(document.createTextNode(cells[k]));
+                                row.appendChild(cell);
+                            }
+                            tbody.appendChild(row); // 将新行元素添加到表格的 tbody 中
+                        }
+                    }
+                }
+            };
+            xhr.send();
+        }
+        // 页面加载完成后加载CSV文件
+        window.onload = function () {
+            loadCSV();
+        };
+        // 搜索功能
+        function search() {
+            var searchInput = document.getElementById("searchInput").value;
+            if (searchInput.trim() === "") return; // 如果搜索框为空则返回
+            var table = document.getElementById("csvTable");
+            var rows = table.getElementsByTagName("tr");
+            var searchResultDiv = document.getElementById("searchResult");
+            searchResultDiv.innerHTML = ""; // 清空搜索结果
+
+            var foundRows = []; // 存储已经找到匹配项的行索引
+
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName("td");
+                for (var j = 0; j < cells.length; j++) {
+                    var cellText = cells[j].innerText || cells[j].textContent;
+                    if (cellText.includes(searchInput) && foundRows.indexOf(i) === -1) {
+                        foundRows.push(i); // 添加行索引到已找到的行索引数组中
+                        var resultText = "搜索结果：<br>" + rows[i].innerHTML.replace(/<\/td>/g, "<br>----<br></td>");
+                        var resultNode = document.createElement("div");
+                        resultNode.innerHTML = resultText;
+                        searchResultDiv.appendChild(resultNode);
+                        break; // 找到匹配项后立即退出内部循环
+                    }
+                }
+            }
+            // 如果没有找到匹配项
+            if (foundRows.length === 0) {
+                var noResultText = "未找到匹配的内容";
+                var noResultNode = document.createElement("p");
+                noResultNode.appendChild(document.createTextNode(noResultText));
+                searchResultDiv.appendChild(noResultNode);
+            }
+        }
+    </script>
+</body>
+</html>
