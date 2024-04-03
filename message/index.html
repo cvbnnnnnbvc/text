@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>留言板</title>
+<title>文字墙</title>
 <style>
 body {
     background-color: rgb(46, 73, 109);
@@ -31,7 +31,7 @@ body {
 </head>
 <body>
 
-<h3>静态留言板</h3>
+<h3>文字留言墙</h3>
 <div id="embeddedTexts">
 <!-- 在这里嵌入文本文件内容 -->
 </div>
@@ -41,44 +41,33 @@ fetchTextFiles();
 
 function fetchTextFiles() {
     const baseUrl = 'https://cvbnnnnnbvc.github.io/text/message/text/';
-    const promises = [];
+    let i = 0;
+    const embeddedTexts = document.getElementById('embeddedTexts');
     
-    for (let i = 0; i <= 100; i++) {
+    function fetchNext() {
         const txtFile = `${baseUrl}${i}.txt`;
-        promises.push(
-            fetch(txtFile)
-                .then(response => {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        return Promise.reject(`文件 ${i}.txt 不存在`);
-                    }
-                })
-                .then(text => {
-                    return { fileName: `${i}.txt`, content: text };
-                })
-                .catch(error => {
-                    console.error(error);
-                    return null; // 如果文件不存在，则返回 null
-                })
-        );
+        
+        fetch(txtFile)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('File not found');
+                }
+                return response.text();
+            })
+            .then(text => {
+                const preElement = document.createElement('pre');
+                preElement.classList.add('greenBox'); 
+                preElement.innerHTML = `<span class="txtFileName">${i}.txt:</span><br><div class="txtFileContent">${text}</div>`;
+                embeddedTexts.appendChild(preElement);
+                i++;
+                fetchNext();
+            })
+            .catch(error => {
+                console.error('获取文本文件内容时出错：', error);
+            });
     }
     
-    Promise.all(promises)
-        .then(contents => {
-            const embeddedTexts = document.getElementById('embeddedTexts');
-            contents.forEach(content => {
-                if (content) {
-                    const preElement = document.createElement('pre');
-                    preElement.classList.add('greenBox'); 
-                    preElement.innerHTML = `<span class="txtFileName">${content.fileName}:</span><br><div class="txtFileContent">${content.content}</div>`;
-                    embeddedTexts.appendChild(preElement);
-                }
-            });
-        })
-        .catch(error => {
-            console.error('获取文本文件内容时出错：', error);
-        });
+    fetchNext();
 }
 </script>
 </body>
