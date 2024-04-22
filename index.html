@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>字符统计、搜索、替换和显示</title>
+    <title>文本处理</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background: #6372bb;
-            color: white;
+            background: #ebebeb;
+            color: rgb(85, 85, 85);
             font-weight: bold; /* 添加按钮文字加粗样式 */
         }
         label {
@@ -39,8 +39,8 @@
             color: white;
         }
         .copybutton, .clearbutton {
-            color: rgb(123, 199, 186);
-            border: 2px solid rgb(123, 199, 186); 
+            color: #085db2;
+            border: 2px solid #085db2; 
             background: white;
             width: 59px; 
             height: 31px; 
@@ -48,8 +48,8 @@
         }
         .copybutton:hover, .clearbutton:hover {
             color: white;
-            background: rgb(123, 199, 186);
-            border: 2px solid rgb(123, 199, 186); 
+            background: #085db2;
+            border: 2px solid #085db2; 
         }
         #inputText, #outputText {
             width: 100%;
@@ -58,7 +58,7 @@
             font-weight: bold;
         }
         #outputText:focus, #inputText:focus, #searchText:focus, #replaceText:focus {
-            outline: 2px solid rgb(123, 199, 186);  
+            outline: 2px solid #aed6ff;  
         }
         #displayedText {
             color: white;
@@ -69,18 +69,13 @@
             display: inline-block;
             max-height: 100px; 
             overflow-y: auto; /* 启用垂直滚动条 */
-            border: 2px solid #9370db; 
+            border: 2px solid #0680fa; 
         }
         button {
-            background: linear-gradient(to right, #ff69b4, #9370db);
+            background: linear-gradient(to right, #085db2, #55a8dc);
             color: white;
             cursor: pointer;
-            border: 1px solid #9370db; /* 修正边框颜色 */
             border-radius: 10px;
-        }
-        button:hover {
-            background: linear-gradient(to right, #ff1493, #8a2be2);
-            border: 1px solid #8a2be2; /* 修正边框颜色 */
         }
     </style>
 </head>
